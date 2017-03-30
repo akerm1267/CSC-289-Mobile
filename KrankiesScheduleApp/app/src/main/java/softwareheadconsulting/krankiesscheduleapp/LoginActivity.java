@@ -3,22 +3,17 @@ package softwareheadconsulting.krankiesscheduleapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.os.NetworkOnMainThreadException;
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,8 +26,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -43,7 +41,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Manifest;
 
 import static android.Manifest.permission.INTERNET;
 
@@ -324,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mUsername = user;
             mPassword = password;
         }
-
+        String testM = "testABC";
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -332,44 +329,76 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             URL url = null;
             String login_URL = "http://167.160.84.186/login.php";
+
             try {
                 Thread.sleep(2000);
+                testM = "hello world";
                 url = new URL(login_URL);
+                testM = "LLLL";
                 HttpURLConnection httpUrlConnection = (HttpURLConnection)url.openConnection();
-                httpUrlConnection.setRequestMethod("_POST");
+                testM = "MMMMMM";
+                httpUrlConnection.setRequestMethod("POST");
                 httpUrlConnection.setDoOutput(true);
                 httpUrlConnection.setDoInput(true);
+
+
                 OutputStream outputStream = httpUrlConnection.getOutputStream();
+                //testM= "ggggg";
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8")+URLEncoder.encode("password","UTF-8")+
+                //testM = "tttttt6";
+                String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8")+"&"+URLEncoder.encode("password","UTF-8")+
                         "="+URLEncoder.encode(mPassword,"UTF-8");
+                testM = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
 
+                /*int status = httpUrlConnection.getResponseCode();
+                testM = String.valueOf(status);*/
+
+                InputStream inputStream = httpUrlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                String result = "";
+                String line = "";
+                while((line = bufferedReader.readLine()) != null)
+                {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpUrlConnection.disconnect();
+                testM = result;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                testM = e.toString();
             } catch (ProtocolException e) {
                 e.printStackTrace();
+                testM = e.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
+                testM = e.toString();
             } catch (IOException e) {
                 e.printStackTrace();
+                //testM = e.toString();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                testM = e.toString();
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
+            /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
+
+                testM = pieces[1];
+
                 if (pieces[0].equals(mUsername)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
-            }
+            }*/
 
-            //return null;
-            return true;
+
+            return false;
 
             // TODO: register the new account here.
         }
@@ -379,15 +408,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (testM.equals("1")) {
                 //finish();
                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
-            } else {
+            } else if(testM.equals("0")) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
+            else
+                Toast.makeText(LoginActivity.this, testM, Toast.LENGTH_SHORT).show();
         }
 
         @Override
