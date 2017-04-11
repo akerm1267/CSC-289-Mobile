@@ -21,6 +21,13 @@ public class Weekday {
         this.endTime = EndTime;
     }
 
+    public Weekday(String Month, String DayOfMonth, String DayOfWeek)
+    {
+        this.month = Month;
+        this.dayOfMonth = DayOfMonth;
+        this.dayOfWeek = DayOfWeek;
+    }
+
     public String getMonth() {
         return month;
     }

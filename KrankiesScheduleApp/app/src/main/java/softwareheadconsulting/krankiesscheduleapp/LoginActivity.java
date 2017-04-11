@@ -39,7 +39,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static android.Manifest.permission.INTERNET;
@@ -79,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        //populateAutoComplete();
+        //populateAutoCompletString[] testDArray = testD.split("&");e();
         mayRequestInternet();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -331,7 +333,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String login_URL = "http://167.160.84.186/login.php";
 
             try {
-                Thread.sleep(2000);
+                //Thread.sleep(2000);
                 testM = "hello world";
                 url = new URL(login_URL);
                 testM = "LLLL";
@@ -381,10 +383,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (IOException e) {
                 e.printStackTrace();
                 //testM = e.toString();
-            } catch (InterruptedException e) {
+            } /*catch (InterruptedException e) {
                 e.printStackTrace();
                 testM = e.toString();
-            }
+            }*/
 
             /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
@@ -411,7 +413,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (testM.equals("1")) {
                 //finish();
                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                Intent main = new Intent(LoginActivity.this, MainActivity.class);
+                main.putExtra("EXTRA_USERNAME", mUsername);
+                main.putExtra("EXTRA_PASSWORD", mPassword);
+                startActivity(main);
 
             } else if(testM.equals("0")) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
