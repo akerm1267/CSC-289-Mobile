@@ -8,17 +8,15 @@ public class Weekday {
     private String month;
     private String dayOfMonth;
     private String dayOfWeek;
-    private String startTime;
-    private String endTime;
+    private String shiftTimes;
 
 
-    public Weekday(String Month, String DayOfMonth, String DayOfWeek, String StartTime, String EndTime)
+    public Weekday(String Month, String DayOfMonth, String DayOfWeek, String ShiftTimes)
     {
         this.month = Month;
         this.dayOfMonth = DayOfMonth;
         this.dayOfWeek = DayOfWeek;
-        this.startTime = StartTime;
-        this.endTime = EndTime;
+        this.shiftTimes = ShiftTimes;
     }
 
     public Weekday(String Month, String DayOfMonth, String DayOfWeek)
@@ -52,19 +50,11 @@ public class Weekday {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getShiftTimes() {
+        return shiftTimes;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setShiftTimes(String shiftTimes) {
+        this.shiftTimes = shiftTimes;
     }
 }

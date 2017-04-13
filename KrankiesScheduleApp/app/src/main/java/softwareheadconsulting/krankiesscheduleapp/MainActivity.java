@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             txtWeekDay.setText(currentWeekday.getDayOfWeek());
 
             TextView txtShift = (TextView) itemView.findViewById(R.id.txtShift_Time);
-            txtShift.setText(currentWeekday.getStartTime() + " - " + currentWeekday.getEndTime());
+            txtShift.setText(currentWeekday.getShiftTimes());
 
             return itemView;
         }
@@ -294,12 +294,30 @@ public class MainActivity extends AppCompatActivity {
                 String[][] aryTimes = new String[3][2];
                 for(int index = 0; index < timeArray.length; index++) {
                     aryTimes[index] = timeArray[index].split("-");
+
+                    for(int aa = 0; aa < aryTimes[index].length; aa++)
+                    {
+                        String[] tempAry = aryTimes[index][aa].split(":");
+                        int tempHour = Integer.valueOf(tempAry[0]);
+                        String amPm = "AM";
+
+                        if(tempHour == 12)
+                            amPm = "PM";
+                        else if(tempHour > 12){
+                            tempHour -= 12;
+                            amPm = "PM";
+                        }
+
+                        aryTimes[index][aa] = String.format("%d:%s %s", tempHour, tempAry[1], amPm);
+                    }
+
+                    timeArray[index] = String.format("%s - %s", aryTimes[index][0], aryTimes[index][1]);
                 }
 
-                weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, aryTimes[0][0], aryTimes[0][1]));
+                weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, timeArray[0] + "\n" + timeArray[1] + "\n" + timeArray[2]));
             }
             else {
-                weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, "---", "---"));
+                weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, "---"));
             }
         }
 
