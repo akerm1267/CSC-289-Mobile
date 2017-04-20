@@ -25,7 +25,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".ForgotPasswordActivity1" />
-        <activity android:name=".ForgotPasswordActivity2"></activity>
+        <activity android:name=".ForgotPasswordActivity2" />
+        <activity android:name=".ResetPasswordActivity"></activity>
     </application>
 
 </manifest>

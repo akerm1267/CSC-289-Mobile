@@ -24,65 +24,50 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class ForgotPasswordActivity1 extends AppCompatActivity {
-    EditText mUsernameView;
-    Button mEnterButton;
-    private UsernameTask mAuthTask = null;
+public class ResetPasswordActivity extends AppCompatActivity {
+    EditText Password1;
+    EditText Password2;
+    String strPass1;
+    String strPass2;
+    private ResetPasswordTask mAuthTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password1);
-        mUsernameView = (EditText) findViewById(R.id.txtUsername);
-        mEnterButton = (Button) findViewById(R.id.btnEnter);
+        setContentView(R.layout.activity_reset_password);
+        Password1 = (EditText) findViewById(R.id.etNewPass);
+        Password2 = (EditText) findViewById(R.id.etConfirmPass);
+        final String username = getIntent().getStringExtra("EXTRA_USERNAME");
 
-        mEnterButton.setOnClickListener(new View.OnClickListener() {
+        Button UpdatePassButton = (Button) findViewById(R.id.btnUpdatePass);
+        UpdatePassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptLogin();
+                strPass1 = Password1.getText().toString();
+                strPass2 = Password2.getText().toString();
+
+                if(!TextUtils.isEmpty(strPass1)) {
+                    if (strPass1.equals(strPass2)) {
+                        mAuthTask = new ResetPasswordTask(username, strPass1);
+                        mAuthTask.execute();
+                    } else {
+                        Password2.setError("Inputs do not match");
+                    }
+                }
+                else
+                    Password1.setError("Enter a password");
             }
         });
     }
 
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mUsernameView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String user = mUsernameView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        if (TextUtils.isEmpty(user)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            //showProgress(true);
-            mAuthTask = new UsernameTask(user);
-            mAuthTask.execute();
-        }
-    }
-
-    public class UsernameTask extends AsyncTask<Void, Void, Boolean> {
+    public class ResetPasswordTask extends AsyncTask<Void, Void, Boolean> {
 
         private String mUsername;
+        private String mNewPassword;
 
-        UsernameTask(String user) {
+        ResetPasswordTask(String user, String newPass) {
             mUsername = user;
+            mNewPassword = newPass;
         }
         String testM = "testABC";
 
@@ -91,7 +76,7 @@ public class ForgotPasswordActivity1 extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             URL url = null;
-            String login_URL = "http://167.160.84.186/checkforuser.php";
+            String login_URL = "http://167.160.84.186/updatepassword.php";
 
             try {
                 //Thread.sleep(2000);
@@ -104,7 +89,8 @@ public class ForgotPasswordActivity1 extends AppCompatActivity {
 
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
 
-                String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8");
+                String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8")+"&"+URLEncoder.encode("password","UTF-8")+
+                        "="+URLEncoder.encode(mNewPassword,"UTF-8");
                 testM = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
@@ -166,17 +152,14 @@ public class ForgotPasswordActivity1 extends AppCompatActivity {
             //showProgress(false);
 
             if (testM.equals("1")) {
-                //finish();
-                Intent forgotPassword2 = new Intent(ForgotPasswordActivity1.this, ForgotPasswordActivity2.class);
-                forgotPassword2.putExtra("EXTRA_USERNAME", mUsername);
-                mUsernameView.setText("");
-                startActivity(forgotPassword2);
-
+                Toast.makeText(ResetPasswordActivity.this, "Password successfully reset", Toast.LENGTH_SHORT).show();
+                Intent login = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                startActivity(login);
             } else if(testM.equals("0")) {
-                mUsernameView.setError("Invalid Username");
+                Toast.makeText(ResetPasswordActivity.this, "Password reset unsuccessful", Toast.LENGTH_SHORT).show();
             }
             else
-                Toast.makeText(ForgotPasswordActivity1.this, testM, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ResetPasswordActivity.this, testM, Toast.LENGTH_SHORT).show();
         }
 
         @Override

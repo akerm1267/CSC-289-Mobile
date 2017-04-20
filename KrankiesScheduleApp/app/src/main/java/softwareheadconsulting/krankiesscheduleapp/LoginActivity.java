@@ -39,9 +39,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static android.Manifest.permission.INTERNET;
@@ -80,11 +78,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
+        mUsernameView = (AutoCompleteTextView) findViewById(R.id.txtUsername);
         //populateAutoCompletString[] testDArray = testD.split("&");e();
         mayRequestInternet();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) findViewById(R.id.txtPassword);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -97,11 +95,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mUsernameSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mUsernameSignInButton = (Button) findViewById(R.id.btnSignIn);
         mUsernameSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        Button mForgotPasswordButton = (Button) findViewById(R.id.btnForgotPassword);
+        mForgotPasswordButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent forgotPassword1 = new Intent(LoginActivity.this, ForgotPasswordActivity1.class);
+                startActivity(forgotPassword1);
             }
         });
 
@@ -416,6 +423,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Intent main = new Intent(LoginActivity.this, MainActivity.class);
                 main.putExtra("EXTRA_USERNAME", mUsername);
                 main.putExtra("EXTRA_PASSWORD", mPassword);
+                mUsernameView.setText("");
+                mPasswordView.setText("");
                 startActivity(main);
 
             } else if(testM.equals("0")) {
