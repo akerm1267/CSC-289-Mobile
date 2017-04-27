@@ -1,7 +1,9 @@
 package softwareheadconsulting.krankiesscheduleapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -53,6 +55,7 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
                     Intent resetPass = new Intent(ForgotPasswordActivity2.this, ResetPasswordActivity.class);
                     resetPass.putExtra("EXTRA_USERNAME", username);
                     startActivity(resetPass);
+                    finish();
                 }
                 else
                     AnswerEditText.setError("Incorrect Answer");
@@ -61,6 +64,28 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
                 //Toast.makeText(ForgotPasswordActivity2.this, securityQuestion, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void onBackPressed()
+    {
+        // code here to show dialog
+        //super.onBackPressed();  // optional depending on your needs
+
+        AlertDialog.Builder backAlert = new AlertDialog.Builder(ForgotPasswordActivity2.this);
+        backAlert.setMessage("Return to login?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //nothing
+                    }
+                });
+        backAlert.show();
     }
 
     public void SetQuestionText(String question) {

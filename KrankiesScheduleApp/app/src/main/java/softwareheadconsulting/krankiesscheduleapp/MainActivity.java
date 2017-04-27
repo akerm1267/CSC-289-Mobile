@@ -1,6 +1,7 @@
 package softwareheadconsulting.krankiesscheduleapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -8,7 +9,10 @@ import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -62,6 +66,61 @@ public class MainActivity extends AppCompatActivity {
         }
 
         populateListview();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_info:
+                BuildInfoAlert();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void BuildInfoAlert()
+    {
+        AlertDialog.Builder infoDialog = new AlertDialog.Builder(MainActivity.this);
+        infoDialog.setMessage(R.string.app_info)
+                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        infoDialog.show();
+    }
+
+    public void onBackPressed()
+    {
+        // code here to show dialog
+        //super.onBackPressed();  // optional depending on your needs
+
+        AlertDialog.Builder backAlert = new AlertDialog.Builder(MainActivity.this);
+        backAlert.setMessage("Log out?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //nothing
+                    }
+                });
+        backAlert.show();
     }
 
     private Weekday getWeekday(int dayIndex) {
@@ -314,7 +373,16 @@ public class MainActivity extends AppCompatActivity {
                     timeArray[index] = String.format("%s - %s", aryTimes[index][0], aryTimes[index][1]);
                 }
 
-                weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, timeArray[0] + "\n" + timeArray[1] + "\n" + timeArray[2]));
+                String tempStr = "";
+                for(int index = 0; index < timeArray.length; index++)
+                {
+                    if(index > 0)
+                        tempStr = String.format("%s%n%s", tempStr, timeArray[index]);
+                    else
+                        tempStr = timeArray[index];
+                }
+
+                weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, tempStr));
             }
             else {
                 weekdayList.add(new Weekday(mMonth, mDayOfMonth, mWeekday, "---"));

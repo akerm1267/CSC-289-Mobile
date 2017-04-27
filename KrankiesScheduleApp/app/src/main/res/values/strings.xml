@@ -15,4 +15,5 @@
         completions."
     </string>
     <string name="title_activity_gg">Sign in</string>
+    <string name="app_info"><b>Krankies Coffee</b>\n211 3rd St E\nWinston-Salem, NC 27295\n(336)722-3016\n\n<b>SoftwareHead</b>\nContributors:\nMatthew Aker, Luis Almeida, Ghin Chau, Vanessa Chavez, Gerardo Gonzalez\nCopyright © 2017 SoftwareHead, Inc.</string>
 </resources>

@@ -1,7 +1,9 @@
 package softwareheadconsulting.krankiesscheduleapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -58,6 +60,28 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     Password1.setError("Enter a password");
             }
         });
+    }
+
+    public void onBackPressed()
+    {
+        // code here to show dialog
+        //super.onBackPressed();  // optional depending on your needs
+
+        AlertDialog.Builder backAlert = new AlertDialog.Builder(ResetPasswordActivity.this);
+        backAlert.setMessage("Return to login?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //nothing
+                    }
+                });
+        backAlert.show();
     }
 
     public class ResetPasswordTask extends AsyncTask<Void, Void, Boolean> {
@@ -153,8 +177,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
             if (testM.equals("1")) {
                 Toast.makeText(ResetPasswordActivity.this, "Password successfully reset", Toast.LENGTH_SHORT).show();
-                Intent login = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                startActivity(login);
+                finish();
             } else if(testM.equals("0")) {
                 Toast.makeText(ResetPasswordActivity.this, "Password reset unsuccessful", Toast.LENGTH_SHORT).show();
             }
