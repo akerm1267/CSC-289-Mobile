@@ -457,7 +457,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(main);
 
             } else if(testM.equals("0")) {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError("Incorrect Username or Password");
                 mPasswordView.requestFocus();
             }
             else

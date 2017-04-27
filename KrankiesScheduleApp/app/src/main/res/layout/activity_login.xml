@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,9 +9,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="softwareheadconsulting.krankiesscheduleapp.LoginActivity">
+    tools:context="softwareheadconsulting.krankiesscheduleapp.LoginActivity"
+    android:weightSum="1">
+
 
     <!-- Login progress -->
+
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -22,7 +26,8 @@
     <LinearLayout
         android:id="@+id/email_login_form"
         android:layout_width="match_parent"
-        android:layout_height="375dp"
+        android:layout_height="336dp"
+        android:layout_weight="0.67"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
@@ -39,19 +44,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/btnSignIn"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="92dp"
-                android:text="SIGN IN"
-                android:textSize="25dp"
-                android:textStyle="bold" />
+            android:layout_height="447dp"
+            android:weightSum="1">
 
             <AutoCompleteTextView
                 android:id="@+id/txtUsername"
@@ -59,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/txtPassword"
                 android:layout_alignParentStart="true"
+                android:layout_marginBottom="8dp"
                 android:hint="Username"
                 android:inputType="text"
                 android:maxLines="1"
@@ -68,15 +63,16 @@
                 android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="187dp"
                 android:hint="Password"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/btnForgotPassword"
@@ -85,7 +81,31 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="12dp"
                 android:text="Forgot Password?" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_above="@+id/txtUsername"
+                android:layout_weight="1.86"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/logo" />
+
+            <Button
+                android:id="@+id/btnSignIn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/btnForgotPassword"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:text="SIGN IN"
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
