@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, dayIndex);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH)+1;
         int monthDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         String strWeekday = "";
@@ -221,7 +221,11 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder shiftDialog = new AlertDialog.Builder(MainActivity.this);
                 shiftDialog.setTitle("Choose a shift");
                 TextView tv = (TextView) view.findViewById(R.id.txtShift_Time);
+                TextView tvMonth = (TextView) view.findViewById(R.id.txtMonth);
+                TextView tvMonthDay = (TextView) view.findViewById(R.id.txtMonthDay);
                 String text = tv.getText().toString();
+                final String textMonth = tvMonth.getText().toString();
+                final String textMonthDay = tvMonthDay.getText().toString();
                 final String[] shifts = text.split("\n");
                 shiftDialog.setItems(shifts, new DialogInterface.OnClickListener() {
                     @Override
@@ -230,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(Intent.ACTION_SENDTO);
                         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
                         intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"manager@167.160.84.186"});
-                        intent.putExtra(Intent.EXTRA_SUBJECT, "[REQUEST TIME OFF] " + shifts[i] );
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "[REQUEST TIME OFF] " +textMonth + " " + textMonthDay + " - " +shifts[i] );
                         if (intent.resolveActivity(getPackageManager()) != null) {
                             startActivity(intent);
                         }
