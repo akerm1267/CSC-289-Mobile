@@ -1,28 +1,20 @@
 package softwareheadconsulting.krankiesscheduleapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.CalendarContract;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,14 +24,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -226,6 +215,36 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<Weekday> adapter = new MyListAdapter();
         ListView lstWeekdays = (ListView) findViewById(R.id.weekListView);
         lstWeekdays.setAdapter(adapter);
+        lstWeekdays.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AlertDialog.Builder shiftDialog = new AlertDialog.Builder(MainActivity.this);
+                shiftDialog.setTitle("Choose a shift");
+                TextView tv = (TextView) view.findViewById(R.id.txtShift_Time);
+                String text = tv.getText().toString();
+                final String[] shifts = text.split("\n");
+                shiftDialog.setItems(shifts, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"manager@167.160.84.186"});
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "[REQUEST TIME OFF] " + shifts[i] );
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }
+                });
+                shiftDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                shiftDialog.show();
+            }
+        });
     }
 
     private class MyListAdapter extends ArrayAdapter<Weekday> {
