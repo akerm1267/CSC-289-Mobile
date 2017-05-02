@@ -1,7 +1,6 @@
 package softwareheadconsulting.krankiesscheduleapp;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,9 +63,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     public void onBackPressed()
     {
-        // code here to show dialog
-        //super.onBackPressed();  // optional depending on your needs
-
         AlertDialog.Builder backAlert = new AlertDialog.Builder(ResetPasswordActivity.this);
         backAlert.setMessage("Return to login?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -93,7 +89,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             mUsername = user;
             mNewPassword = newPass;
         }
-        String testM = "testABC";
+        String strResult = "";
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -103,7 +99,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
             String login_URL = "http://167.160.84.186/updatepassword.php";
 
             try {
-                //Thread.sleep(2000);
                 url = new URL(login_URL);
                 HttpURLConnection httpUrlConnection = (HttpURLConnection)url.openConnection();
                 httpUrlConnection.setRequestMethod("POST");
@@ -115,15 +110,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8")+"&"+URLEncoder.encode("password","UTF-8")+
                         "="+URLEncoder.encode(mNewPassword,"UTF-8");
-                testM = post_data;
+                strResult = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
-
-                /*int status = httpUrlConnection.getResponseCode();
-                testM = String.valueOf(status);*/
-
                 InputStream inputStream = httpUrlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
@@ -135,63 +126,41 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 bufferedReader.close();
                 inputStream.close();
                 httpUrlConnection.disconnect();
-                testM = result;
+                strResult = result;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (ProtocolException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (IOException e) {
                 e.printStackTrace();
-                //testM = e.toString();
-            } /*catch (InterruptedException e) {
-                e.printStackTrace();
-                testM = e.toString();
-            }*/
-
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-
-                testM = pieces[1];
-
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-
+                //strResult = e.toString();
+            }
             return false;
-
             // TODO: register the new account here.
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            //showProgress(false);
 
-            if (testM.equals("1")) {
+            if (strResult.equals("1")) {
                 Toast.makeText(ResetPasswordActivity.this, "Password successfully reset", Toast.LENGTH_SHORT).show();
                 finish();
-            } else if(testM.equals("0")) {
+            } else if(strResult.equals("0")) {
                 Toast.makeText(ResetPasswordActivity.this, "Password reset unsuccessful", Toast.LENGTH_SHORT).show();
             }
             else
-                Toast.makeText(ResetPasswordActivity.this, testM, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ResetPasswordActivity.this, strResult, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            //showProgress(false);
         }
-
-
-
     }
 }

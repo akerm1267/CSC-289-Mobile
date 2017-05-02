@@ -108,17 +108,15 @@ public class ForgotPasswordActivity1 extends AppCompatActivity {
         UsernameTask(String user) {
             mUsername = user;
         }
-        String testM = "testABC";
+        String strResult = "";
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
             URL url = null;
             String login_URL = "http://167.160.84.186/checkforuser.php";
 
             try {
-                //Thread.sleep(2000);
                 url = new URL(login_URL);
                 HttpURLConnection httpUrlConnection = (HttpURLConnection)url.openConnection();
                 httpUrlConnection.setRequestMethod("POST");
@@ -129,15 +127,11 @@ public class ForgotPasswordActivity1 extends AppCompatActivity {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
 
                 String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8");
-                testM = post_data;
+                strResult = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
-
-                /*int status = httpUrlConnection.getResponseCode();
-                testM = String.valueOf(status);*/
-
                 InputStream inputStream = httpUrlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
@@ -149,64 +143,43 @@ public class ForgotPasswordActivity1 extends AppCompatActivity {
                 bufferedReader.close();
                 inputStream.close();
                 httpUrlConnection.disconnect();
-                testM = result;
+                strResult = result;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (ProtocolException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (IOException e) {
                 e.printStackTrace();
-                //testM = e.toString();
-            } /*catch (InterruptedException e) {
-                e.printStackTrace();
-                testM = e.toString();
-            }*/
-
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-
-                testM = pieces[1];
-
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-
+                //strResult = e.toString();
+            }
             return false;
-
-            // TODO: register the new account here.
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            //showProgress(false);
 
-            if (testM.equals("1")) {
-                //finish();
+            if (strResult.equals("1")) {
                 Intent forgotPassword2 = new Intent(ForgotPasswordActivity1.this, ForgotPasswordActivity2.class);
                 forgotPassword2.putExtra("EXTRA_USERNAME", mUsername);
                 startActivity(forgotPassword2);
                 finish();
 
-            } else if(testM.equals("0")) {
+            } else if(strResult.equals("0")) {
                 mUsernameView.setError("Invalid Username");
             }
             else
-                Toast.makeText(ForgotPasswordActivity1.this, testM, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPasswordActivity1.this, strResult, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            //showProgress(false);
         }
 
 

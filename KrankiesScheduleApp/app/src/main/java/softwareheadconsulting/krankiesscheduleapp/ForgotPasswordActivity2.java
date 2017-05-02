@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -61,16 +60,12 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
                     AnswerEditText.setError("Incorrect Answer");
 
                 QuestionText.setText(securityQuestion);
-                //Toast.makeText(ForgotPasswordActivity2.this, securityQuestion, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void onBackPressed()
     {
-        // code here to show dialog
-        //super.onBackPressed();  // optional depending on your needs
-
         AlertDialog.Builder backAlert = new AlertDialog.Builder(ForgotPasswordActivity2.this);
         backAlert.setMessage("Return to login?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -100,7 +95,7 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
             mUsername = user;
         }
 
-        String testM = "";
+        String strResult = "";
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -118,14 +113,11 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
                 OutputStream outputStream = httpUrlConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8");
-                testM = post_data;
+                strResult = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
-                //int status = httpUrlConnection.getResponseCode();
-                //testM = String.valueOf(status);
-
                 InputStream inputStream = httpUrlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
@@ -137,44 +129,30 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
                 bufferedReader.close();
                 inputStream.close();
                 httpUrlConnection.disconnect();
-                testM = result;
+                strResult = result;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (ProtocolException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (IOException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-
-                testM = pieces[1];
-
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-
             return false;
-
             // TODO: register the new account here.
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            String[] QnA = testM.split("&");
+            String[] QnA = strResult.split("&");
 
             SetQuestionText(QnA[0]);
             securityAnswer = QnA[1];
@@ -184,8 +162,5 @@ public class ForgotPasswordActivity2 extends AppCompatActivity {
         protected void onCancelled() {
 
         }
-
-
-
     }
 }

@@ -1,7 +1,5 @@
 package softwareheadconsulting.krankiesscheduleapp;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.DialogInterface;
@@ -81,7 +79,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.txtUsername);
-        //populateAutoCompletString[] testDArray = testD.split("&");e();
         mayRequestInternet();
 
         mPasswordView = (EditText) findViewById(R.id.txtPassword);
@@ -123,7 +120,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     {
         // code here to show dialog
         //super.onBackPressed();  // optional depending on your needs
-
         AlertDialog.Builder backAlert = new AlertDialog.Builder(LoginActivity.this);
         backAlert.setMessage("Are you sure you want to leave?")
         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -151,11 +147,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean mayRequestInternet() {
         Toast.makeText(LoginActivity.this, "No", Toast.LENGTH_SHORT);
-        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }*/
+
         if (checkSelfPermission(INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            //Toast.makeText(LoginActivity.this, "Yess", Toast.LENGTH_SHORT);
             return true;
         }
 
@@ -189,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
@@ -215,12 +208,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mPasswordView;
             cancel = true;
         }
-        /*else if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }*/
-
 
         if (TextUtils.isEmpty(user)) {
             mUsernameView.setError(getString(R.string.error_field_required));
@@ -229,76 +216,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            //showProgress(true);
             mAuthTask = new UserLoginTask(user, password);
             mAuthTask.execute();
         }
     }
 
-
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    /*@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }*/
-
-    /*@Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }*/
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -323,7 +251,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
@@ -334,8 +261,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private interface ProfileQuery {
         String[] PROJECTION = {
-                //ContactsContract.CommonDataKinds.Email.ADDRESS,
-                //ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
         };
 
         int ADDRESS = 0;
@@ -355,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mUsername = user;
             mPassword = password;
         }
-        String testM = "testABC";
+        String strResult = "";
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -365,32 +290,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String login_URL = "http://167.160.84.186/login.php";
 
             try {
-                //Thread.sleep(2000);
-                testM = "hello world";
                 url = new URL(login_URL);
-                testM = "LLLL";
                 HttpURLConnection httpUrlConnection = (HttpURLConnection)url.openConnection();
-                testM = "MMMMMM";
                 httpUrlConnection.setRequestMethod("POST");
                 httpUrlConnection.setDoOutput(true);
                 httpUrlConnection.setDoInput(true);
 
-
                 OutputStream outputStream = httpUrlConnection.getOutputStream();
-                //testM= "ggggg";
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                //testM = "tttttt6";
                 String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8")+"&"+URLEncoder.encode("password","UTF-8")+
                         "="+URLEncoder.encode(mPassword,"UTF-8");
-                testM = post_data;
+                strResult = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
-
-                /*int status = httpUrlConnection.getResponseCode();
-                testM = String.valueOf(status);*/
-
                 InputStream inputStream = httpUrlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
                 String result = "";
@@ -402,43 +316,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 bufferedReader.close();
                 inputStream.close();
                 httpUrlConnection.disconnect();
-                testM = result;
+                strResult = result;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (ProtocolException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (IOException e) {
                 e.printStackTrace();
-                //testM = e.toString();
+                //strResult = e.toString();
             }
             catch (Exception e) {
             }
-            /*catch (InterruptedException e) {
-                e.printStackTrace();
-                testM = e.toString();
-            }*/
-
-
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-
-                testM = pieces[1];
-
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-
             return false;
-
-            // TODO: register the new account here.
         }
 
         @Override
@@ -446,22 +340,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             //showProgress(false);
 
-            if (testM.equals("1")) {
-                //finish();
+            if (strResult.equals("1")) {
                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                 Intent main = new Intent(LoginActivity.this, MainActivity.class);
                 main.putExtra("EXTRA_USERNAME", mUsername);
-                main.putExtra("EXTRA_PASSWORD", mPassword);
                 mUsernameView.setText("");
                 mPasswordView.setText("");
                 startActivity(main);
 
-            } else if(testM.equals("0")) {
+            } else if(strResult.equals("0")) {
                 mPasswordView.setError("Incorrect Username or Password");
                 mPasswordView.requestFocus();
             }
             else
-                Toast.makeText(LoginActivity.this, testM, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, strResult, Toast.LENGTH_SHORT).show();
         }
 
         @Override

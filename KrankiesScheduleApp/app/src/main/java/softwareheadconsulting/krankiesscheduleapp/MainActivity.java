@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String username = getIntent().getStringExtra("EXTRA_USERNAME");
-        String password = getIntent().getStringExtra("EXTRA_PASSWORD");
 
         List<Weekday> days = new ArrayList<>();
         days = sortedWeekdays();
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
         switch (item.getItemId())
         {
             case R.id.action_info:
@@ -93,9 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onBackPressed()
     {
-        // code here to show dialog
-        //super.onBackPressed();  // optional depending on your needs
-
         AlertDialog.Builder backAlert = new AlertDialog.Builder(MainActivity.this);
         backAlert.setMessage("Log out?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -219,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 AlertDialog.Builder shiftDialog = new AlertDialog.Builder(MainActivity.this);
-                shiftDialog.setTitle("Choose a shift");
+                shiftDialog.setTitle("Request time off");
                 TextView tv = (TextView) view.findViewById(R.id.txtShift_Time);
                 TextView tvMonth = (TextView) view.findViewById(R.id.txtMonth);
                 TextView tvMonthDay = (TextView) view.findViewById(R.id.txtMonthDay);
@@ -296,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
             mDayOfMonth = day.getDayOfMonth();
         }
 
-        String testM = "";
+        String strResult = "";
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -315,13 +310,13 @@ public class MainActivity extends AppCompatActivity {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("user_name","UTF-8")+"="+URLEncoder.encode(mUsername,"UTF-8")+"&"+URLEncoder.encode("dayOfWeek","UTF-8")+
                         "="+URLEncoder.encode(mWeekday,"UTF-8");
-                testM = post_data;
+                strResult = post_data;
                 bufferedWriter.write(post_data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
                 //int status = httpUrlConnection.getResponseCode();
-                //testM = String.valueOf(status);
+                //strResult = String.valueOf(status);
 
                 InputStream inputStream = httpUrlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
@@ -334,46 +329,32 @@ public class MainActivity extends AppCompatActivity {
                 bufferedReader.close();
                 inputStream.close();
                 httpUrlConnection.disconnect();
-                testM = result;
+                strResult = result;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (ProtocolException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             } catch (IOException e) {
                 e.printStackTrace();
-                testM = e.toString();
+                strResult = e.toString();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-
-                testM = pieces[1];
-
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
-
-
             return false;
-
             // TODO: register the new account here.
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            if(!testM.equals("---"))
+            if(!strResult.equals("---"))
             {
-                String[] timeArray = testM.split("&");
+                String[] timeArray = strResult.split("&");
                 String[][] aryTimes = new String[3][2];
                 for(int index = 0; index < timeArray.length; index++) {
                     aryTimes[index] = timeArray[index].split("-");
@@ -417,8 +398,5 @@ public class MainActivity extends AppCompatActivity {
         protected void onCancelled() {
 
         }
-
-
-
     }
 }
